@@ -612,6 +612,9 @@ case "${host}" in
   tic80*)
 	sys_dir=tic80
 	;;
+  x86_64-*-ulmeros*)
+    sys_dir=ulmeros
+	;;
   v70-nec-*)
 	sys_dir=sysvnecv70
 	;;

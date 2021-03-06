@@ -1692,6 +1692,9 @@ case $os in
 	# VxWorks passes extra cpu info in the 4th filed.
 	simlinux | simwindows | spe)
 		;;
+	ulmeros*)
+		os=ulmeros
+		;;
 	# Now accept the basic system types.
 	# The portable systems comes first.
 	# Each alternative MUST end in a * to match a version number.
