@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "syscalls.h"
 
@@ -28,13 +29,13 @@ void _exit(int status)
   /* never reached */
 }
 
-int read(int file, char *ptr, int len)
+_READ_WRITE_RETURN_TYPE read(int file, void *ptr, size_t len)
 {
   ssize_t ret = _ulmeros_syscall3(SYS_READ, file, (size_t)ptr, len);
   SYSCALL_RETURN_ERRNO(ret);
 }
 
-int write(int file, char *ptr, int len)
+_READ_WRITE_RETURN_TYPE write(int file, const void *ptr, size_t len)
 {
   ssize_t ret = _ulmeros_syscall3(SYS_WRITE, file, (size_t)ptr, len);
   SYSCALL_RETURN_ERRNO(ret);
@@ -63,7 +64,7 @@ int fork()
   SYSCALL_RETURN_ERRNO(ret);
 }
 
-int execve(char *name, char **argv, char **envp)
+int execve(const char *name, char *const *argv, char *const *envp)
 {
   ssize_t ret = _ulmeros_syscall3(SYS_EXECVE, (size_t)name, (size_t)argv, (size_t)envp);
   SYSCALL_RETURN_ERRNO(ret);
@@ -87,19 +88,19 @@ int kill(int pid, int sig)
   return -1;
 }
 
-int link(char *oldpath, char *newpath)
+int link(const char *oldpath, const char *newpath)
 {
   ssize_t ret = _ulmeros_syscall2(SYS_LINK, (size_t)oldpath, (size_t)newpath);
   SYSCALL_RETURN_ERRNO(ret);
 }
 
-int lseek(int file, int ptr, int dir)
+off_t lseek(int file, off_t ptr, int whence)
 {
-  ssize_t ret = _ulmeros_syscall3(SYS_LSEEK, file, (size_t)ptr, dir);
+  ssize_t ret = _ulmeros_syscall3(SYS_LSEEK, file, (size_t)ptr, whence);
   SYSCALL_RETURN_ERRNO(ret);
 }
 
-caddr_t sbrk(int incr)
+void* sbrk(ptrdiff_t incr)
 {
   return (caddr_t)_ulmeros_syscall1(SYS_SBRK, incr);
 }
@@ -115,7 +116,7 @@ clock_t times(struct tms *buf)
   return (clock_t)-1;
 }
 
-int unlink(char *name)
+int unlink(const char *name)
 {
   errno = ENOSYS;
   return -1;
